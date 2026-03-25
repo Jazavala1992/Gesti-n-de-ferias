@@ -349,7 +349,7 @@ public class Main {
 		LDobleEm E6 = new LDobleEm();
 		E6.adicionar(new Emprendedor("Daniela", "Ossio", 8934767,"Tacos","La Catrina",986667), new Emprendimiento("La Catrina", "Comida Mejicana", "Me 1"),Me20,Cl20);
 		E6.adicionar(new Emprendedor("Sabrina", "Duchen", 96777697,"Pastas","Domino",5476869), new Emprendimiento("Domino", "Comida Italiana", "It 6"),Me21,Cl21);
-		E6.adicionar(new Emprendedor("Nicole", "Morales", 42356546,"Comida Peruana","El Callao",78067576), new Emprendimiento("El Calloa", "Comida Peruana", "Pe 2"),Me22,Cl22);
+		E6.adicionar(new Emprendedor("Nicole", "Morales", 42356546,"Comida Peruana","El Callao",780067), new Emprendimiento("El Calloa", "Comida Peruana", "Pe 2"),Me22,Cl22);
 		
 		LDobleEm E7 = new LDobleEm();
 		
@@ -601,25 +601,34 @@ public class Main {
 				
 		// 5 mover emprendedores de una feria a otra
 		
-		public static void moverEm(LDobleF A, String x, String y)
-		{
-			NodoEm aux=new NodoEm();
-			NodoF f=A.getP();
-			while (f!=null)
-			{
-				LDobleEm E=f.getEmprendedores();
-				NodoEm em=E.getP();
-				while (em!=null)
-                {
-					if (em.getEmprendedor().getNombreEmprendimiento().equals(x)) 
-						aux=eliminarEm(E, em);
-					
-					em=em.getSig();
-                }
-				f=f.getSig();
+		public static void moverEm(LDobleF A, String x, String y) {
+			NodoEm aux = null;  // Inicializar como null
+			NodoF f = A.getP();
+			
+			while (f != null) {
+				LDobleEm E = f.getEmprendedores();
+				NodoEm em = E.getP();
+				
+				while (em != null) {
+					NodoEm siguiente = em.getSig();  // Guardar siguiente antes de eliminar
+
+					if (em.getEmprendedor().getNombreEmprendimiento().equals(x)) {
+						aux = eliminarEm(E, em);
+						break;  // Salir del loop interno después de encontrar
+					}
+					em = siguiente;
+				}
+				
+				if (aux != null) break;  // Salir del loop externo si ya encontró
+				f = f.getSig();
 			}
-			adiemp(aux, A, y);
-			encuentraRes(A, x);
+			
+			if (aux != null) {  // Validar que se encontró el emprendimiento
+				adiemp(aux, A, y);
+				encuentraRes(A, x);
+			} else {
+				System.out.println("Emprendimiento no encontrado: " + x);
+			}
 		}		
 		public static void adiemp(NodoEm a, LDobleF A, String y) 
 		{
@@ -628,9 +637,9 @@ public class Main {
 			{
 				LDobleEm E = f.getEmprendedores();
 				if (f.getFeria().getIdFeria().equals(y)) 
-					{
+				{
 					adifin(E, a);
-					}
+				}
 				
 				f = f.getSig();
 			}
@@ -638,20 +647,19 @@ public class Main {
 		
 		public static void adifin(LDobleEm E, NodoEm a) 
 		{
+			a.setSig(null);  // Limpiar puntero siguiente
+			a.setAnt(null);  // Limpiar puntero anterior
+			
 			NodoEm q = E.getP();
-			if (E.getP() == null)
+			if (E.getP() == null) {
 				E.setP(a);
-				
-			else
-			{
-				while (q.getSig() != null) 
-				{
+			} else {
+				while (q.getSig() != null) {
 					q = q.getSig();
 				}
 				q.setSig(a);
 				a.setAnt(q);
 			}
-			
 		}
 
 		public static NodoEm eliminarEm(LDobleEm E,NodoEm A) 
