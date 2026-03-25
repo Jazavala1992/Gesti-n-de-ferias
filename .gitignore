@@ -1,0 +1,13 @@
+# Compiled output
+bin/
+*.class
+
+# macOS
+.DS_Store
+
+# Eclipse
+.settings/
+.metadata/
+
+# Logs
+*.log
